@@ -1,0 +1,10 @@
+{
+  "name": "@moss-toolbox/imagen",
+  "version": "0.1.0",
+  "private": false,
+  "description": "OpenClaw plugin: /imagen command and optional imagine tool",
+  "license": "MIT",
+  "openclaw": {
+    "extensions": ["./src/index.ts"]
+  }
+}

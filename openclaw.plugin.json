@@ -1,0 +1,91 @@
+{
+  "id": "imagen",
+  "name": "Imagen",
+  "description": "Generate images from a text prompt using an OpenAI-compatible Images API.",
+  "skills": ["./skills"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "providerId": {
+        "type": "string",
+        "default": "openai",
+        "description": "Provider id in models.providers to read baseUrl/apiKey from. Ignored when baseUrl is set."
+      },
+      "baseUrl": {
+        "type": "string",
+        "description": "Override OpenAI-compatible base URL (with or without /v1). Example: https://api.openai.com/v1"
+      },
+      "apiKey": {
+        "type": "string",
+        "description": "Override API key. If omitted, the plugin will still attempt the call (some backends may not require auth)."
+      },
+      "model": {
+        "type": "string",
+        "default": "dall-e-3"
+      },
+      "size": {
+        "type": "string",
+        "default": "1024x1024"
+      },
+      "quality": {
+        "type": "string",
+        "default": "standard"
+      },
+      "style": {
+        "type": "string",
+        "enum": ["vivid", "natural"],
+        "description": "Optional style hint (supported by some models/providers)."
+      },
+      "sendMode": {
+        "type": "string",
+        "enum": ["file", "url"],
+        "default": "file",
+        "description": "Prefer sending as a local file (best for Telegram when b64_json is available), or send a URL."
+      },
+      "outputDir": {
+        "type": "string",
+        "description": "Directory to store generated images. Defaults to <agents.defaults.workspace>/media/imagine when set, otherwise ~/.openclaw/media/imagine."
+      }
+    }
+  },
+  "uiHints": {
+    "providerId": {
+      "label": "Provider Id",
+      "placeholder": "openai"
+    },
+    "baseUrl": {
+      "label": "Base URL",
+      "placeholder": "https://api.openai.com/v1"
+    },
+    "apiKey": {
+      "label": "API Key",
+      "sensitive": true,
+      "placeholder": "sk-..."
+    },
+    "model": {
+      "label": "Model",
+      "placeholder": "dall-e-3"
+    },
+    "size": {
+      "label": "Size",
+      "placeholder": "1024x1024"
+    },
+    "quality": {
+      "label": "Quality",
+      "placeholder": "standard"
+    },
+    "style": {
+      "label": "Style",
+      "placeholder": "vivid"
+    },
+    "sendMode": {
+      "label": "Send Mode",
+      "placeholder": "file"
+    },
+    "outputDir": {
+      "label": "Output Dir",
+      "placeholder": "media/imagine"
+    }
+  }
+}
