@@ -1,12 +1,21 @@
-# @moss-toolbox/imagen (OpenClaw plugin)
+# @moss-toolbox/imagen
 
-## Credits
+[![CI](https://github.com/Moss-Toolbox/imagen/actions/workflows/ci.yml/badge.svg)](https://github.com/Moss-Toolbox/imagen/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/@moss-toolbox/imagen)](https://www.npmjs.com/package/@moss-toolbox/imagen)
+[![npm downloads](https://img.shields.io/npm/dm/@moss-toolbox/imagen)](https://www.npmjs.com/package/@moss-toolbox/imagen)
+[![license](https://img.shields.io/npm/l/@moss-toolbox/imagen)](./LICENSE)
 
-Built with assistance from **Moss**, an AI assistant running inside OpenClaw.
+An [OpenClaw](https://openclaw.dev) plugin that generates images from text prompts using any OpenAI-compatible Images API (`POST /v1/images/generations`).
 
-Adds an `imagen` skill and an agent tool `image_generate` that generate an image from a text prompt using an OpenAI-compatible Images API (`POST /v1/images/generations`).
+Provides a `/imagen` chat command and an `image_generate` agent tool.
 
-## Install (local dev link)
+## Install
+
+```bash
+npm install @moss-toolbox/imagen
+```
+
+Or install as a local plugin:
 
 ```bash
 openclaw plugins install -l /path/to/imagen
@@ -14,19 +23,57 @@ openclaw plugins install -l /path/to/imagen
 
 Restart the OpenClaw Gateway after installing or changing config.
 
-## Quick test
+## Quick start
 
-1) Install (local link):
-
-```bash
-openclaw plugins install -l /path/to/imagen
-```
-
-2) Configure (example):
+1. Configure the plugin in `~/.openclaw/openclaw.json`:
 
 ```json5
 {
-  // Strongly recommended for Telegram local media allowlist: keep media under workspace.
+  plugins: {
+    entries: {
+      imagen: {
+        enabled: true,
+        config: {
+          providerId: "openai",
+          sendMode: "file",
+        }
+      }
+    }
+  }
+}
+```
+
+2. Restart the gateway.
+
+3. In chat:
+
+```
+/imagen a watercolor robot drinking espresso
+```
+
+## Configuration
+
+Add the following under `plugins.entries.imagen.config` in `~/.openclaw/openclaw.json`:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `providerId` | `string` | `"openai"` | Provider id to read `baseUrl`/`apiKey` from `models.providers` |
+| `baseUrl` | `string` | — | Override API base URL (with or without `/v1`) |
+| `apiKey` | `string` | — | Override API key |
+| `model` | `string` | `"dall-e-3"` | Model to use for generation |
+| `size` | `string` | `"1024x1024"` | Image size |
+| `quality` | `string` | `"standard"` | Image quality |
+| `style` | `"vivid" \| "natural"` | — | Optional style hint |
+| `sendMode` | `"file" \| "url"` | `"file"` | Return a local file or a remote URL |
+| `outputDir` | `string` | `<workspace>/media/imagine` | Directory to store generated images |
+
+If `providerId` is set, the plugin reads `baseUrl` and `apiKey` from `models.providers[providerId]`. If `apiKey` is missing, the plugin still attempts the request (some backends don't require auth).
+
+<details>
+<summary>Full config example</summary>
+
+```json5
+{
   agents: {
     defaults: {
       workspace: "~/openclaw-workspace"
@@ -38,53 +85,11 @@ openclaw plugins install -l /path/to/imagen
         enabled: true,
         config: {
           providerId: "openai",
-          sendMode: "file",
-          // Optional: override. Default is <workspace>/media/imagine
-          // outputDir: "media/imagine"
-        }
-      }
-    }
-  }
-}
-```
-
-3) Restart gateway.
-
-4) In chat:
-
-`/imagen a watercolor robot drinking espresso`
-
-## Config
-
-Add this under `plugins.entries.imagen.config` in `~/.openclaw/openclaw.json`:
-
-```json5
-{
-  plugins: {
-    entries: {
-      imagen: {
-        enabled: true,
-        config: {
-          // Preferred: read baseUrl/apiKey from models.providers[providerId]
-          providerId: "openai",
-
-          // Or override directly:
-          // baseUrl: "https://api.openai.com/v1",
-          // apiKey: "${OPENAI_API_KEY}",
-
           model: "dall-e-3",
           size: "1024x1024",
           quality: "standard",
-          // style: "vivid", // optional: vivid | natural
-
-          // file: prefers attachments (best when backend returns b64_json)
-          // url: sends the returned URL
+          // style: "vivid",
           sendMode: "file",
-
-          // Where to write local image files when sendMode=file (or when the API returns b64_json).
-          // Default: <agents.defaults.workspace>/media/imagine when set, otherwise ~/.openclaw/media/imagine
-          // For Telegram local media allowlist, prefer a path under your agent workspace.
-          // outputDir can be absolute, or relative to agents.defaults.workspace (if set), otherwise relative to ~/.openclaw
           // outputDir: "media/imagine"
         }
       }
@@ -93,16 +98,11 @@ Add this under `plugins.entries.imagen.config` in `~/.openclaw/openclaw.json`:
 }
 ```
 
-If `providerId` is set, the plugin reads:
+</details>
 
-* `models.providers[providerId].baseUrl`
-* `models.providers[providerId].apiKey`
+## Agent tool
 
-If `apiKey` is missing, the plugin still attempts the request (some backends don't require auth).
-
-## Optional: enable the `image_generate` agent tool
-
-The tool is registered as optional. Enable it for an agent (or globally) via allowlist:
+The `image_generate` tool is registered as optional. Enable it for an agent (or globally) via allowlist:
 
 ```json5
 {
@@ -121,6 +121,15 @@ The tool is registered as optional. Enable it for an agent (or globally) via all
 
 ## Notes
 
-- `/imagen` is implemented as a skill (command dispatch -> tool), not a plugin `registerCommand` handler.
+- `/imagen` is implemented as a skill (command dispatch → tool), not a plugin `registerCommand` handler.
 - `image_generate` always requests `b64_json` and writes a local file.
-- When using `dall-e-3`, only these sizes are allowed: `1024x1024`, `1024x1792`, `1792x1024`.
+- DALL-E 3 only allows these sizes: `1024x1024`, `1024x1792`, `1792x1024`.
+- Requests time out after 90 seconds.
+
+## Credits
+
+Built with assistance from Moss, an AI assistant running inside OpenClaw.
+
+## License
+
+[MIT](./LICENSE)
