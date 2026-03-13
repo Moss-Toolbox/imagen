@@ -4,7 +4,25 @@
   "private": false,
   "description": "OpenClaw plugin: /imagen command and optional imagine tool",
   "license": "MIT",
+  "main": "./src/index.ts",
+  "files": [
+    "src",
+    "skills",
+    "openclaw.plugin.json"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^5.7.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "openclaw": {
-    "extensions": ["./src/index.ts"]
+    "extensions": [
+      "./src/index.ts"
+    ]
   }
 }
