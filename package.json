@@ -4,6 +4,10 @@
   "private": false,
   "description": "OpenClaw plugin: /imagen command and optional imagine tool",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Moss-Toolbox/imagen"
+  },
   "main": "./src/index.ts",
   "files": [
     "src",
