@@ -20,5 +20,6 @@ Example:
 ## Notes
 
 - The underlying tool is `image_generate`.
-- The tool always requests `b64_json` and writes a local image file.
-- When using `dall-e-3`, only these sizes are allowed: `1024x1024`, `1024x1792`, `1792x1024`.
+- By default, uses the chat completions API (`/v1/chat/completions`), which works with most providers (OpenAI, Google, etc.).
+- Set `endpoint: "openai-images"` in plugin config to use the DALL-E Images API (`/v1/images/generations`) instead.
+- When using `openai-images` with `dall-e-3`, only these sizes are allowed: `1024x1024`, `1024x1792`, `1792x1024`.

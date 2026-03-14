@@ -1,12 +1,18 @@
 {
   "id": "imagen",
   "name": "Imagen",
-  "description": "Generate images from a text prompt using an OpenAI-compatible Images API.",
+  "description": "Generate images from a text prompt using chat completions (default) or any OpenAI-compatible Images API.",
   "skills": ["./skills"],
   "configSchema": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
+      "endpoint": {
+        "type": "string",
+        "enum": ["chat-completions", "openai-images"],
+        "default": "chat-completions",
+        "description": "API strategy: chat-completions (works with most providers) or openai-images (DALL-E /v1/images/generations)."
+      },
       "providerId": {
         "type": "string",
         "default": "openai",
@@ -14,7 +20,7 @@
       },
       "baseUrl": {
         "type": "string",
-        "description": "Override OpenAI-compatible base URL (with or without /v1). Example: https://api.openai.com/v1"
+        "description": "Override API base URL (with or without /v1). Example: https://api.openai.com/v1"
       },
       "apiKey": {
         "type": "string",
@@ -22,7 +28,7 @@
       },
       "model": {
         "type": "string",
-        "default": "dall-e-3"
+        "description": "Model to use. Defaults to gpt-4o (chat-completions) or dall-e-3 (openai-images)."
       },
       "size": {
         "type": "string",
@@ -35,13 +41,13 @@
       "style": {
         "type": "string",
         "enum": ["vivid", "natural"],
-        "description": "Optional style hint (supported by some models/providers)."
+        "description": "Optional style hint (supported by openai-images endpoint)."
       },
       "sendMode": {
         "type": "string",
         "enum": ["file", "url"],
         "default": "file",
-        "description": "Prefer sending as a local file (best for Telegram when b64_json is available), or send a URL."
+        "description": "Prefer sending as a local file or send a URL."
       },
       "outputDir": {
         "type": "string",
@@ -50,6 +56,10 @@
     }
   },
   "uiHints": {
+    "endpoint": {
+      "label": "Endpoint",
+      "placeholder": "chat-completions"
+    },
     "providerId": {
       "label": "Provider Id",
       "placeholder": "openai"
@@ -65,7 +75,7 @@
     },
     "model": {
       "label": "Model",
-      "placeholder": "dall-e-3"
+      "placeholder": "gpt-4o"
     },
     "size": {
       "label": "Size",
