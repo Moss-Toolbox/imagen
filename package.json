@@ -15,11 +15,16 @@
     "openclaw.plugin.json"
   ],
   "scripts": {
+    "test": "vitest run --project unit",
+    "test:watch": "vitest --project unit",
+    "e2e": "vitest run --project e2e",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
-    "typescript": "^5.7.0"
+    "dotenv": "^17.2.2",
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.4"
   },
   "publishConfig": {
     "access": "public"
@@ -28,5 +33,8 @@
     "extensions": [
       "./src/index.ts"
     ]
+  },
+  "dependencies": {
+    "openai": "^6.27.0"
   }
 }
